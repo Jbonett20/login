@@ -13,33 +13,31 @@ class noticias{
         }
           
     }
-    public static function  listarNoticias(){
+    public static function listarNoticias() {
         include('../config/db.php');
         $query = "SELECT n.*, u.name FROM `noticias` as n
-                    INNER JOIN user as u 
-                    ON n.creador_id= u.id";
-        $result = mysqli_query($conn,$query);
-        $noticias = array();
-        $data = [];
-      
-            if($obj = mysqli_fetch_assoc($result)){
+                  INNER JOIN user as u ON n.creador_id = u.id";
+        
+        $result = mysqli_query($conn, $query);
+        $noticias = [];
+    
+        if (!$result) {
+            echo 'No se pudo ejecutar la consulta';
+            exit;
+        } else {
+            while ($obj = mysqli_fetch_assoc($result)) {
+                $data = []; 
                 $data['id'] = $obj['noticia_id'];
                 $data['noticia'] = $obj['noticia'];
                 $data['contenido'] = $obj['contenido'];
                 $data['usuario'] = $obj['name'];
                 $data['creador'] = $obj['creador_id'];
                 $data['fecha'] = $obj['fechacreacion'];
-               
-               }
-               $noticias[] =$data;
-        
-        
-       /*   echo '<pre>';
-        print_r($noticias);
-        echo '</pre>';  */
-        return  $noticias;
-        
+                
+                $noticias[] = $data; 
+            }
         }
-
-
+    
+        return $noticias;
+    }
 }
